@@ -1,8 +1,8 @@
 {
     "mongo": {
-        "addr": "mongodb://127.0.0.1:27017/",
-        "db": "temp",
+        "addr": "mongodb://10.12.0.30:27017/",
+        "db": "proxy",
         "table": "pool"
     },
-    "host": ":8080"
+    "host": ":8083"
 }

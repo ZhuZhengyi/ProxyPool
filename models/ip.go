@@ -1,12 +1,18 @@
 package models
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"time"
+
+	"gopkg.in/mgo.v2/bson"
+)
 
 // IP struct
 type IP struct {
-	ID   bson.ObjectId `bson:"_id" json:"-"`
-	Data string        `bson:"data" json:"ip"`
-	Type string        `bson:"type" json:"type"`
+	ID         bson.ObjectId `bson:"_id" json:"-"`
+	Data       string        `bson:"data" json:"ip"`
+	Type       string        `bson:"type" json:"type"`
+	CreateTime time.Time     `bson:"create_time" json:"create_time"`
+	UpdateTime time.Time     `bson:"update_time" json:"update_time"`
 }
 
 // NewIP .

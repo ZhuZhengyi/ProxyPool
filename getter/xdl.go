@@ -6,7 +6,8 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/henson/ProxyPool/models"
+	//"github.com/henson/ProxyPool/models"
+	"../models"
 	"github.com/nladuo/go-phantomjs-fetcher"
 )
 
@@ -40,7 +41,7 @@ func XDL() (result []*models.IP) {
 		ssss = strings.Replace(strings.ToLower(ssss), "/", ",", -1)
 		ip := models.NewIP()
 		ip.Data = ss + ":" + sss
-		ip.Type = ssss
+		ip.Type = strings.ToLower(ssss)
 		result = append(result, ip)
 	})
 	log.Println("XDL done.")

@@ -6,16 +6,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/henson/ProxyPool/api"
-	"github.com/henson/ProxyPool/getter"
-	"github.com/henson/ProxyPool/models"
-	"github.com/henson/ProxyPool/storage"
+	"./api"
+	"./getter"
+	"./models"
+	"./storage"
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	ipChan := make(chan *models.IP, 1000)
 	conn := storage.NewStorage()
+	stop := make(chan bool)
 
 	// Start HTTP
 	go func() {
@@ -24,7 +25,15 @@ func main() {
 
 	// Check the IPs in DB
 	go func() {
-		storage.CheckProxyDB()
+		for {
+			select {
+			case <-stop:
+				stop <- true
+				return
+			case <-time.After(1 * time.Minute):
+				storage.CheckProxyDB()
+			}
+		}
 	}()
 
 	// Check the IPs in channel
@@ -45,6 +54,8 @@ func main() {
 		}
 		time.Sleep(10 * time.Minute)
 	}
+
+	stop <- true
 }
 
 func run(ipChan chan<- *models.IP) {
@@ -62,8 +73,16 @@ func run(ipChan chan<- *models.IP) {
 	for _, f := range funs {
 		wg.Add(1)
 		go func(f func() []*models.IP) {
+			//defer f
+			defer func() {
+				if err := recover(); err != nil {
+					log.Println("Error: ", err)
+				}
+			}()
 			temp := f()
 			for _, v := range temp {
+				v.CreateTime = time.Now()
+				v.UpdateTime = time.Now()
 				ipChan <- v
 			}
 			wg.Done()

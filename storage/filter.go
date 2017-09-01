@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/henson/ProxyPool/models"
+	"../models"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -46,6 +46,8 @@ func CheckProxyDB() {
 		go func(v *models.IP) {
 			if !CheckIP(v) {
 				ProxyDel(v)
+			} else {
+				ProxyUpdateTime(v)
 			}
 			wg.Done()
 		}(v)
@@ -88,6 +90,15 @@ func ProxyAdd(ip *models.IP) {
 func ProxyDel(ip *models.IP) {
 	conn := NewStorage()
 	if err := conn.Delete(ip); err != nil {
+		log.Println(err.Error())
+	}
+}
+
+// ProxyUpdateTime
+func ProxyUpdateTime(ip *models.IP) {
+	conn := NewStorage()
+	ip.UpdateTime = time.Now()
+	if err := conn.Update(ip); err != nil {
 		log.Println(err.Error())
 	}
 }

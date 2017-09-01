@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/henson/ProxyPool/models"
+	"../models"
 	"github.com/nladuo/go-phantomjs-fetcher"
 )
 

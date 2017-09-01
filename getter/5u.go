@@ -3,9 +3,11 @@ package getter
 import (
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/henson/ProxyPool/models"
+	//"github.com/henson/ProxyPool/models"
+	"../models"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -31,7 +33,7 @@ func Data5u() (result []*models.IP) {
 		ssss := s.Find("ul:nth-child(" + node + ") > span:nth-child(4) > li").Text()
 		ip := models.NewIP()
 		ip.Data = ss + ":" + sss
-		ip.Type = ssss
+		ip.Type = strings.ToLower(ssss)
 		result = append(result, ip)
 	})
 	log.Println("Data5u done.")

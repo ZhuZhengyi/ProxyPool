@@ -7,7 +7,8 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/henson/ProxyPool/models"
+	//"github.com/henson/ProxyPool/models"
+	"../models"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -34,7 +35,7 @@ func GBJ() (result []*models.IP) {
 			re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")
 			ip := models.NewIP()
 			ip.Data = re.ReplaceAllString(tee, "")
-			ip.Type = s.Find("td:nth-child(3) > a").Text()
+			ip.Type = strings.ToLower(s.Find("td:nth-child(3) > a").Text())
 			result = append(result, ip)
 		})
 	}
